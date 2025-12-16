@@ -6,13 +6,14 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci
+# Install dependencies with timeout and no optional deps
+RUN npm ci --omit=optional --prefer-offline --no-audit
 
 # Copy application code
 COPY . .
 
-# Build the Next.js application
+# Build the Next.js application with limited memory
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm run build
 
 # Production stage
