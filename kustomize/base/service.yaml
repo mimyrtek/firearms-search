@@ -3,8 +3,12 @@ kind: Service
 metadata:
   name: firearms-search
   namespace: firearms-search
+  annotations:
+    metallb.universe.tf/allow-shared-ip: "firearms-search"
+    # Uncomment and set if you want a specific IP from your MetalLB pool:
+    # metallb.universe.tf/loadBalancerIPs: "192.168.1.100"
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: firearms-search
   ports:
