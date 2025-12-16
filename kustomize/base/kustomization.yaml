@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - namespace.yaml
+  - deployment.yaml
+  - service.yaml
+  - configmap.yaml
+  - secret.yaml
+
+commonLabels:
+  app: firearms-search
+  managed-by: kustomize
+
+images:
+  - name: firearms-search
+    newName: ghcr.io/YOUR_GITHUB_USERNAME/firearms-search
+    newTag: latest
