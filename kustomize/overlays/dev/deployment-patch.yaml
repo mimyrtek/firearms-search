@@ -4,6 +4,7 @@ metadata:
   name: firearms-search
   namespace: firearms-search
 spec:
+  replicas: 2
   template:
     spec:
       containers:
