@@ -13,8 +13,6 @@ spec:
       labels:
         app: firearms-search
     spec:
-      imagePullSecrets:
-      - name: ghcr-secret
       containers:
       - name: firearms-search
         image: firearms-search:latest
