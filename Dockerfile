@@ -1,34 +1,29 @@
 # Build stage
-FROM node:20-alpine AS builder
-
+FROM node:20-alpine AS deps
 WORKDIR /app
+COPY package.json ./
+RUN npm install --legacy-peer-deps
 
-# Copy package files
-COPY package*.json ./
-
-# Install dependencies with timeout and no optional deps
-RUN npm ci --omit=optional --prefer-offline --no-audit
-
-# Copy application code
+# Builder stage
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-# Build the Next.js application with limited memory
-ENV NODE_OPTIONS="--max-old-space-size=4096"
+ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
 # Production stage
 FROM node:20-alpine AS runner
-
 WORKDIR /app
 
-# Set to production
 ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Create non-root user
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
 
-# Copy standalone output
+# Copy built application
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
@@ -37,7 +32,7 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
 CMD ["node", "server.js"]
