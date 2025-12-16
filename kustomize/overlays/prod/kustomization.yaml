@@ -3,8 +3,10 @@ kind: Kustomization
 
 namespace: firearms-search
 
-bases:
+resources:
   - ../../base
+  - ingress.yaml
+  - hpa.yaml
 
 nameSuffix: -prod
 
@@ -16,12 +18,16 @@ images:
   - name: firearms-search
     newTag: latest
 
-patchesStrategicMerge:
-  - deployment-patch.yaml
-  - ingress.yaml
+patches:
+  - path: deployment-patch.yaml
+    target:
+      kind: Deployment
+      name: firearms-search
 
 configMapGenerator:
   - name: firearms-search-config
-    behavior: merge
+    behavior: replace
     literals:
       - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
