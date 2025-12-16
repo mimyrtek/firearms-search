@@ -15,4 +15,4 @@ commonLabels:
 images:
   - name: firearms-search
     newName: ghcr.io/mimyrtek/firearms-search
-    newTag: latest
+    newTag: main
