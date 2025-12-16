@@ -17,8 +17,6 @@ interface LicenceHolder {
   licence_type: string;
   valid_from: string;
   valid_to: string;
-  created_at: string;
-  updated_at: string;
 }
 
 interface Firearm {
@@ -32,15 +30,11 @@ interface Firearm {
   barrel_length_mm: number;
   chamber_size_mm: number;
   manufacture_year: number;
-  proof_date: string;
   condition: string;
   notes: string;
-  transfer_status: string;
-  created_at: string;
-  updated_at: string;
 }
 
-export default function LicenceHolderSearch() {
+export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [holders, setHolders] = useState<LicenceHolder[]>([]);
   const [loading, setLoading] = useState(false);
@@ -72,7 +66,6 @@ export default function LicenceHolderSearch() {
 
   const loadFirearms = async (holderId: string) => {
     if (selectedHolder === holderId) {
-      // Toggle off if clicking same holder
       setSelectedHolder(null);
       setFirearms([]);
       return;
@@ -115,11 +108,10 @@ export default function LicenceHolderSearch() {
             >
               <h3 className="font-bold text-lg">{holder.full_name}</h3>
               <div className="grid grid-cols-2 gap-2 mt-2 text-sm">
-                <p><span className="font-semibold">Licence Number:</span> {holder.licence_number_raw}</p>
+                <p><span className="font-semibold">Licence:</span> {holder.licence_number_raw}</p>
                 <p><span className="font-semibold">DOB:</span> {holder.dob}</p>
                 <p><span className="font-semibold">Type:</span> {holder.licence_type}</p>
-                <p><span className="font-semibold">Valid From:</span> {holder.valid_from}</p>
-                <p><span className="font-semibold">Valid To:</span> {holder.valid_to}</p>
+                <p><span className="font-semibold">Valid:</span> {holder.valid_from} to {holder.valid_to}</p>
                 <p><span className="font-semibold">Email:</span> {holder.email}</p>
                 <p><span className="font-semibold">Phone:</span> {holder.phone}</p>
                 <p className="col-span-2"><span className="font-semibold">Address:</span> {holder.address_line}</p>
@@ -136,7 +128,7 @@ export default function LicenceHolderSearch() {
                 {loadingFirearms && <p className="text-sm">Loading firearms...</p>}
                 
                 {!loadingFirearms && firearms.length === 0 && (
-                  <p className="text-sm text-gray-500">No firearms registered to this holder</p>
+                  <p className="text-sm text-gray-500">No firearms registered</p>
                 )}
 
                 {!loadingFirearms && firearms.length > 0 && (
@@ -154,7 +146,6 @@ export default function LicenceHolderSearch() {
                           <p><span className="font-semibold">Chamber:</span> {firearm.chamber_size_mm}mm</p>
                           <p><span className="font-semibold">Year:</span> {firearm.manufacture_year}</p>
                           <p><span className="font-semibold">Condition:</span> {firearm.condition}</p>
-                          <p><span className="font-semibold">Status:</span> {firearm.transfer_status}</p>
                           {firearm.notes && (
                             <p className="col-span-2"><span className="font-semibold">Notes:</span> {firearm.notes}</p>
                           )}
