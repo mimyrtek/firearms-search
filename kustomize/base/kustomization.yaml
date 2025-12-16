@@ -14,5 +14,5 @@ commonLabels:
 
 images:
   - name: firearms-search
-    newName: ghcr.io/YOUR_GITHUB_USERNAME/firearms-search
+    newName: ghcr.io/mimyrtek/firearms-search
     newTag: latest
